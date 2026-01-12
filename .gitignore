@@ -1,0 +1,33 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+
+# Virtual environments
+.venv/
+.vscode/
+
+# yizhiliao
+# 模型目录
+clips/
+clip-ViT-B-32/
+danmu_per_second/
+eeg_data/
+forrest_output/
+icml/
+llava/
+models/
+siglip-so400m-patch14-384/
+
+# 弹幕目录
+Raw_danmu/
+results/
+
+################################################################
+# yizhiliao
+!/data/readme.md
+

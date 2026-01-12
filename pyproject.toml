@@ -1,0 +1,19 @@
+[project]
+name = "ncclab-ddh"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "chardet==5.2.0",
+    "decord==0.6.0",
+    "einops==0.8.1",
+    "h5py>=3.15.1",
+    "mne>=1.11.0",
+    "opencv-python>=4.12.0.88",
+    "pandas>=2.3.3",
+    "peft==0.13.2",
+    "sentence-transformers==5.2.0",
+    "torch==2.9.1",
+    "transformers==4.45.0",
+]
