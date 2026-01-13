@@ -281,6 +281,8 @@ def main():
 
         duration = 10
         video_name = slice_name.split('_')[0]
+        if 'agzz' not in video_name:  # FIXME. 临时处理
+            continue
         video_idx = int(slice_name.split('_')[3])
         slice_start_time = int(slice_name.split('_')[-3][:-1])
         slice_end_time = int(slice_name.split('_')[-1][:-1])
@@ -306,34 +308,65 @@ def main():
         if not danmu_text:
             MODE = 3  # 如果没有弹幕，切换到仅视频模式
 
-        existing_data = {}
-        current_prompt = build_prompt(MODE, duration, video_desc, danmu_text)
-        existing_data["prompt"] = current_prompt
-        existing_data["duration"] = duration  # 记录时长方便解析
+        if video_name == 'agzz':
+            for MODE in [2, 3]:
+                existing_data = {}
+                current_prompt = build_prompt(MODE, duration, video_desc, danmu_text)
+                existing_data["prompt"] = current_prompt
+                existing_data["duration"] = duration  # 记录时长方便解析
 
-        output_path = Path(DIR_OUTPUT) / f"{slice_name}_mode_{MODE}.json"
+                output_path = Path(DIR_OUTPUT) / f"{slice_name}_mode_{MODE}.json"
 
-        # 检查是否已存在结果文件
-        if output_path.exists() and not FORCE_REBUILD_PROMPT:
-            print(f"  Output already exists at {output_path}, skipping...")
-            continue
+                # 检查是否已存在结果文件
+                if output_path.exists() and not FORCE_REBUILD_PROMPT:
+                    print(f"  Output already exists at {output_path}, skipping...")
+                    continue
 
-        # === LLM 调用逻辑 ===
-        if CALL_LLM:
-            # 检查是否已有 response (断点续传)
-            if not existing_data.get("response"):
-                try:
-                    response = call_llm_api(current_prompt)
-                    existing_data["response"] = response
-                except Exception as e:
-                    print(f"    LLM Call Failed: {e}")
-            else:
-                pass  # 已有 response，跳过
+                # === LLM 调用逻辑 ===
+                if CALL_LLM:
+                    # 检查是否已有 response (断点续传)
+                    if not existing_data.get("response"):
+                        try:
+                            response = call_llm_api(current_prompt)
+                            existing_data["response"] = response
+                        except Exception as e:
+                            print(f"    LLM Call Failed: {e}")
+                    else:
+                        pass  # 已有 response，跳过
 
-        # === 保存结果 ===
-        # 即使不调用 LLM，也保存 prompt
-        with open(str(output_path), 'w', encoding='utf-8') as f:
-            json.dump(existing_data, f, ensure_ascii=False, indent=2)
+                # === 保存结果 ===
+                # 即使不调用 LLM，也保存 prompt
+                with open(str(output_path), 'w', encoding='utf-8') as f:
+                    json.dump(existing_data, f, ensure_ascii=False, indent=2)
+        else:
+            existing_data = {}
+            current_prompt = build_prompt(MODE, duration, video_desc, danmu_text)
+            existing_data["prompt"] = current_prompt
+            existing_data["duration"] = duration  # 记录时长方便解析
+
+            output_path = Path(DIR_OUTPUT) / f"{slice_name}_mode_{MODE}.json"
+
+            # 检查是否已存在结果文件
+            if output_path.exists() and not FORCE_REBUILD_PROMPT:
+                print(f"  Output already exists at {output_path}, skipping...")
+                continue
+
+            # === LLM 调用逻辑 ===
+            if CALL_LLM:
+                # 检查是否已有 response (断点续传)
+                if not existing_data.get("response"):
+                    try:
+                        response = call_llm_api(current_prompt)
+                        existing_data["response"] = response
+                    except Exception as e:
+                        print(f"    LLM Call Failed: {e}")
+                else:
+                    pass  # 已有 response，跳过
+
+            # === 保存结果 ===
+            # 即使不调用 LLM，也保存 prompt
+            with open(str(output_path), 'w', encoding='utf-8') as f:
+                json.dump(existing_data, f, ensure_ascii=False, indent=2)
 
     print(f"Finished processing {video_idx}")
 

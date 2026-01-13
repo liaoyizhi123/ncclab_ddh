@@ -235,6 +235,8 @@ def plot_scores(times, scores, video_id):
 def main():
     # 获取电影episode列表
     ___ = sorted(list(Path('/home/liaoyizhi/codes/ncclab_ddh/results/prompt_v2').glob('*.json')))
+    # ___ = sorted(list(Path('/home/liaoyizhi/codes/ncclab_ddh/results_mode2/prompt_v2').glob('*_mode_2.json')))
+    # ___ = sorted(list(Path('/home/liaoyizhi/codes/ncclab_ddh/results_mode3/prompt_v2').glob('*_mode_3.json')))
     episodes_li = sorted(
         list(
             set(
